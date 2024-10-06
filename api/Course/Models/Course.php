@@ -43,6 +43,6 @@ class Course
     {
         return $this->categoryId;
     }
-    
+
     // TODO: Add methods for database interaction (CRUD) as needed
 }
