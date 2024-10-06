@@ -2,6 +2,8 @@
 
 namespace Category\Models;
 
+use Utils\Database;
+
 class Category
 {
     private string $id;
@@ -15,20 +17,80 @@ class Category
         $this->parent = $parent;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return $this->parent;
     }
 
-    // TODO: Add methods for database interaction (CRUD) as needed
+    public function create(): void
+    {
+        $db = new Database();
+        $conn = $db->getConnection();
+
+        try {
+            $sql = "INSERT INTO categories (id, name, parent) VALUES (?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$this->id, $this->name, $this->parent]);
+        } catch (PDOException $e) {
+            // Handle the exception, e.g., log it or throw a custom exception
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function update(): void
+    {
+        $db = new Database();
+        $conn = $db->getConnection();
+
+        try {
+            $sql = "UPDATE categories SET name = ?, parent = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$this->name, $this->parent, $this->id]);
+        } catch (PDOException $e) {
+            // Handle the exception, e.g., log it or throw a custom exception
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function read(): ?array
+    {
+        $db = new Database();
+        $conn = $db->getConnection();
+
+        try {
+            $sql = "SELECT * FROM categories WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$this->id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Handle the exception, e.g., log it or throw a custom exception
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    public function delete(): void
+    {
+        $db = new Database();
+        $conn = $db->getConnection();
+
+        try {
+            $sql = "DELETE FROM categories WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$this->id]);
+        } catch (PDOException $e) {
+            // Handle the exception, e.g., log it or throw a custom exception
+            echo "Error: " . $e->getMessage();
+        }
+    }
 }

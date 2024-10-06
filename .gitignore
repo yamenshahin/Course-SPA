@@ -1,3 +1,4 @@
 .idea
 database/volume
 api/php-cs-fixer.phar
+api/.env
