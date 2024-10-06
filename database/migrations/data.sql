@@ -5,6 +5,8 @@ CREATE TABLE
         `id` VARCHAR(36) PRIMARY KEY,
         `name` VARCHAR(255) NOT NULL,
         `parent` VARCHAR(255) DEFAULT NULL,
+        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (`parent`) REFERENCES `category` (`id`)
     );
 
@@ -125,17 +127,19 @@ VALUES
 -- Table course
 CREATE TABLE
     `course` (
-        `course_id` VARCHAR(36) PRIMARY KEY,
+        `id` VARCHAR(36) PRIMARY KEY,
         `title` VARCHAR(255) NOT NULL,
         `description` TEXT NOT NULL,
         `image_preview` VARCHAR(255) NOT NULL,
         `category_id` VARCHAR(36) NOT NULL,
+        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
     );
 
 INSERT INTO
     `course` (
-        `course_id`,
+        `id`,
         `title`,
         `description`,
         `image_preview`,
@@ -199,7 +203,38 @@ VALUES
         '8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d'
     );
 
+// Create view for category course count
+CREATE VIEW category_course_count_a AS
+WITH RECURSIVE CategoryHierarchy AS (
+    -- Base case: Select each category by itself
+    SELECT 
+        id AS category_id,
+        id AS root_id
+    FROM 
+        category
+    UNION ALL
+    -- Recursive case: Select subcategories
+    SELECT 
+        c.id AS category_id,
+        ch.root_id
+    FROM 
+        category c
+    INNER JOIN 
+        CategoryHierarchy ch ON c.parent = ch.category_id
+)
+SELECT 
+    ch.root_id AS category_id,
+    COUNT(co.id) AS count_of_courses
+FROM 
+    CategoryHierarchy ch
+LEFT JOIN 
+    course co ON ch.category_id = co.category_id
+GROUP BY 
+    ch.root_id;
+
 -- down
 DROP TABLE `course`;
 
 DROP TABLE `category`;
+
+DROP VIEW `category_course_count_a`;
