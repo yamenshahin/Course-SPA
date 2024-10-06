@@ -18,7 +18,7 @@ class CategoryController
      *
      * @throws \PDOException If there's a problem with the query
      */
-    public function getAllCategories(): array
+    public function getAll(): array
     {
         $db = Database::getInstance();
         $conn = $db->getConnection();
@@ -40,12 +40,12 @@ class CategoryController
      *
      * @param string $id The ID of the category to retrieve
      *
-     * @return Category|null The category with the given ID, or null if no such
+     * @return array|null The category with the given ID, or null if no such
      *     category exists
      *
      * @throws \PDOException If there's a problem with the query
      */
-    public function getCategoryById(string $id): ?Category
+    public function getById(string $id): ?array
     {
         $db = Database::getInstance();
         $conn = $db->getConnection();
@@ -57,7 +57,7 @@ class CategoryController
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
             if ($result) {
-                return new Category($result['id'], $result['name'], $result['parent']);
+                return $result;
             } else {
                 return null;
             }
