@@ -1,0 +1,15 @@
+{
+    "name": "yamona/api",
+    "description": "Pure PHP Restful API",
+    "autoload": {
+        "psr-4": {
+            "Yamona\\Api\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Yamen"
+        }
+    ],
+    "require": {}
+}
