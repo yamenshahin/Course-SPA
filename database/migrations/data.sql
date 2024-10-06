@@ -134,7 +134,7 @@ CREATE TABLE
     );
 
 INSERT INTO
-    `courses` (
+    `course` (
         `course_id`,
         `title`,
         `description`,
