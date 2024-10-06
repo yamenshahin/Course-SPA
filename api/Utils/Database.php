@@ -3,7 +3,6 @@
 namespace Utils;
 
 use Config\DB;
-use PDO;
 
 class Database
 {
@@ -13,9 +12,10 @@ class Database
     private function __construct()
     {
         $dbConfig = DB::get();
+        print_r($dbConfig);
         $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']}";
-        $this->connection = new PDO($dsn, $dbConfig['user'], $dbConfig['password']);
-        $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->connection = new \PDO($dsn, $dbConfig['user'], $dbConfig['password']);
+        $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     /**

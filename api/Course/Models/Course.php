@@ -57,7 +57,7 @@ class Course
         $conn = $db->getConnection();
 
         try {
-            $sql = "INSERT INTO courses (id, title, description, image_preview, category_id) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO course (id, title, description, image_preview, category_id) VALUES (?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$this->id, $this->title, $this->description, $this->imagePreview, $this->categoryId]);
         } catch (PDOException $e) {
@@ -77,7 +77,7 @@ class Course
         $conn = $db->getConnection();
 
         try {
-            $sql = "UPDATE courses SET title = ?, description = ?, image_preview = ?, category_id = ? WHERE id = ?";
+            $sql = "UPDATE course SET title = ?, description = ?, image_preview = ?, category_id = ? WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$this->title, $this->description, $this->imagePreview, $this->categoryId, $this->id]);
         } catch (PDOException $e) {
@@ -99,7 +99,7 @@ class Course
         $conn = $db->getConnection();
 
         try {
-            $sql = "SELECT * FROM courses WHERE id = ?";
+            $sql = "SELECT * FROM course WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$this->id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -121,7 +121,7 @@ class Course
         $conn = $db->getConnection();
 
         try {
-            $sql = "DELETE FROM courses WHERE id = ?";
+            $sql = "DELETE FROM course WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$this->id]);
         } catch (PDOException $e) {

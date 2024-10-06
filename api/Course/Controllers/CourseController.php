@@ -26,7 +26,7 @@ class CourseController
         $conn = $db->getConnection();
 
         try {
-            $sql = "SELECT * FROM courses";
+            $sql = "SELECT * FROM course";
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -53,7 +53,7 @@ class CourseController
         $conn = $db->getConnection();
 
         try {
-            $sql = "SELECT * FROM courses WHERE id = ?";
+            $sql = "SELECT * FROM course WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);

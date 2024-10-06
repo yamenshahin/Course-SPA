@@ -43,7 +43,7 @@ class Category
         $conn = $db->getConnection();
 
         try {
-            $sql = "INSERT INTO categories (id, name, parent) VALUES (?, ?, ?)";
+            $sql = "INSERT INTO category (id, name, parent) VALUES (?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$this->id, $this->name, $this->parent]);
         } catch (PDOException $e) {
@@ -63,7 +63,7 @@ class Category
         $conn = $db->getConnection();
 
         try {
-            $sql = "UPDATE categories SET name = ?, parent = ? WHERE id = ?";
+            $sql = "UPDATE category SET name = ?, parent = ? WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$this->name, $this->parent, $this->id]);
         } catch (PDOException $e) {
@@ -85,7 +85,7 @@ class Category
         $conn = $db->getConnection();
 
         try {
-            $sql = "SELECT * FROM categories WHERE id = ?";
+            $sql = "SELECT * FROM category WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$this->id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -107,7 +107,7 @@ class Category
         $conn = $db->getConnection();
 
         try {
-            $sql = "DELETE FROM categories WHERE id = ?";
+            $sql = "DELETE FROM category WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$this->id]);
         } catch (PDOException $e) {

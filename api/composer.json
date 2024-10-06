@@ -4,7 +4,9 @@
     "autoload": {
         "psr-4": {
             "Category\\": "Category/",
-            "Course\\": "Course/"
+            "Course\\": "Course/",
+            "Utils\\": "Utils/",
+            "Config\\": "Config/"
         }
     },
     "authors": [

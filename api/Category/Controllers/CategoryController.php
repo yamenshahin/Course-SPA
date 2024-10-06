@@ -16,7 +16,7 @@ class CategoryController
      *     - name
      *     - parent
      *
-     * @throws PDOException If there's a problem with the query
+     * @throws \PDOException If there's a problem with the query
      */
     public function getAllCategories(): array
     {
@@ -24,11 +24,11 @@ class CategoryController
         $conn = $db->getConnection();
 
         try {
-            $sql = "SELECT * FROM categories";
+            $sql = "SELECT * FROM category";
             $stmt = $conn->prepare($sql);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
             // Handle the exception, e.g., log it or throw a custom exception
             echo "Error: " . $e->getMessage();
             return [];
@@ -43,7 +43,7 @@ class CategoryController
      * @return Category|null The category with the given ID, or null if no such
      *     category exists
      *
-     * @throws PDOException If there's a problem with the query
+     * @throws \PDOException If there's a problem with the query
      */
     public function getCategoryById(string $id): ?Category
     {
@@ -51,17 +51,17 @@ class CategoryController
         $conn = $db->getConnection();
 
         try {
-            $sql = "SELECT * FROM categories WHERE id = ?";
+            $sql = "SELECT * FROM category WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$id]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
             if ($result) {
                 return new Category($result['id'], $result['name'], $result['parent']);
             } else {
                 return null;
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             // Handle the exception, e.g., log it or throw a custom exception
             echo "Error: " . $e->getMessage();
             return null;
@@ -74,11 +74,11 @@ class CategoryController
         $conn = $db->getConnection();
 
         try {
-            $sql = "SELECT * FROM courses WHERE category_id = ?";
+            $sql = "SELECT * FROM course WHERE category_id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$categoryId]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
             // Handle the exception, e.g., log it or throw a custom exception
             echo "Error: " . $e->getMessage();
             return [];

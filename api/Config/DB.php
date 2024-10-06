@@ -12,10 +12,10 @@ class DB
     public static function get(): array
     {
         return [
-            'host' => getenv('DB_HOST', 'localhost'),
-            'user' => getenv('DB_USER', 'root'),
-            'password' => getenv('DB_PASSWORD', 'root'),
-            'dbname' => getenv('DB_NAME', 'course_catalog')
+            'host' => $_ENV['DB_HOST'] ?? 'localhost',
+            'user' => $_ENV['DB_USER'] ?? 'root',
+            'password' => $_ENV['DB_PASSWORD'] ?? '',
+            'dbname' => $_ENV['DB_NAME'] ?? 'test',
         ];
     }
 }
