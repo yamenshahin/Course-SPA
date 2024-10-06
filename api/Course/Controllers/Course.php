@@ -7,6 +7,19 @@ use Utils\Database;
 
 class CourseController
 {
+    /**
+     * Retrieves all courses from the database.
+     *
+     * @return array An array of courses. Each course is an associative array
+     *     with the following keys:
+     *     - id
+     *     - title
+     *     - description
+     *     - image_preview
+     *     - category_id
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function getAllCourses(): array
     {
         $db = Database::getInstance();
@@ -24,6 +37,16 @@ class CourseController
         }
     }
 
+    /**
+     * Retrieves a course from the database by its ID.
+     *
+     * @param string $id The ID of the course to retrieve
+     *
+     * @return Course|null The course with the given ID, or null if no such
+     *     course exists
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function getCourseById(string $id): ?Course
     {
         $db = Database::getInstance();

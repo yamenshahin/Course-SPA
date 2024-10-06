@@ -32,6 +32,11 @@ class Category
         return $this->parent;
     }
 
+    /**
+     * Inserts the category into the database.
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function create(): void
     {
         $db = new Database();
@@ -47,6 +52,11 @@ class Category
         }
     }
 
+    /**
+     * Updates the category in the database.
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function update(): void
     {
         $db = new Database();
@@ -62,6 +72,13 @@ class Category
         }
     }
 
+    /**
+     * Fetches a category from the database and returns it as an associative array.
+     * If the category does not exist, returns null.
+     *
+     * @return array|null
+     * @throws PDOException If there's a problem with the query
+     */
     public function read(): ?array
     {
         $db = new Database();
@@ -79,6 +96,11 @@ class Category
         }
     }
 
+    /**
+     * Deletes the category from the database.
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function delete(): void
     {
         $db = new Database();

@@ -4,7 +4,12 @@ namespace Config;
 
 class DB
 {
-    public static function get()
+    /**
+     * Get database config
+     *
+     * @return array
+     */
+    public static function get(): array
     {
         return [
             'host' => getenv('DB_HOST', 'localhost'),

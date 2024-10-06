@@ -18,6 +18,11 @@ class Database
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
+    /**
+     * Returns the single instance of the Database class.
+     *
+     * @return Database
+     */
     public static function getInstance()
     {
         if (self::$instance === null) {
@@ -26,6 +31,11 @@ class Database
         return self::$instance;
     }
 
+    /**
+     * Returns the PDO connection object.
+     *
+     * @return PDO
+     */
     public function getConnection()
     {
         return $this->connection;

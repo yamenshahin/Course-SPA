@@ -46,6 +46,11 @@ class Course
         return $this->categoryId;
     }
 
+    /**
+     * Inserts the course into the database.
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function create(): void
     {
         $db = Database::getInstance();
@@ -61,6 +66,11 @@ class Course
         }
     }
 
+    /**
+     * Updates the course in the database.
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function update(): void
     {
         $db = Database::getInstance();
@@ -76,6 +86,13 @@ class Course
         }
     }
 
+    /**
+     * Fetches a course from the database and returns it as an associative array.
+     * If the course does not exist, returns null.
+     *
+     * @return array|null
+     * @throws PDOException If there's a problem with the query
+     */
     public function read(): ?array
     {
         $db = Database::getInstance();
@@ -93,6 +110,11 @@ class Course
         }
     }
 
+    /**
+     * Deletes the course from the database.
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function delete(): void
     {
         $db = Database::getInstance();

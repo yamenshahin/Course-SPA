@@ -7,6 +7,17 @@ use Utils\Database;
 
 class CategoryController
 {
+    /**
+     * Retrieves all categories from the database.
+     *
+     * @return array An array of categories. Each category is an associative array
+     *     with the following keys:
+     *     - id
+     *     - name
+     *     - parent
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function getAllCategories(): array
     {
         $db = Database::getInstance();
@@ -24,6 +35,16 @@ class CategoryController
         }
     }
 
+    /**
+     * Retrieves a category from the database by its ID.
+     *
+     * @param string $id The ID of the category to retrieve
+     *
+     * @return Category|null The category with the given ID, or null if no such
+     *     category exists
+     *
+     * @throws PDOException If there's a problem with the query
+     */
     public function getCategoryById(string $id): ?Category
     {
         $db = Database::getInstance();
