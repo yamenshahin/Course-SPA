@@ -3,7 +3,8 @@
     "description": "Pure PHP Restful API",
     "autoload": {
         "psr-4": {
-            "Category\\": "Category/"
+            "Category\\": "Category/",
+            "Course\\": "Course/"
         }
     },
     "authors": [
