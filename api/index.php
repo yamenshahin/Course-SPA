@@ -1,3 +1,6 @@
 <?php
 
-echo "API coming soon";
+require __DIR__ . '/vendor/autoload.php';
+
+$category = new Category\Controllers\Category();
+echo $category->get()->message;

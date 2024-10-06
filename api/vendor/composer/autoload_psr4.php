@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Yamona\\Api\\' => array($baseDir . '/src'),
+    'Category\\' => array($baseDir . '/Category'),
 );

@@ -3,7 +3,7 @@
     "description": "Pure PHP Restful API",
     "autoload": {
         "psr-4": {
-            "Yamona\\Api\\": "src/"
+            "Category\\": "Category/"
         }
     },
     "authors": [

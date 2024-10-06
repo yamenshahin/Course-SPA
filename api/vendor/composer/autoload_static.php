@@ -7,16 +7,16 @@ namespace Composer\Autoload;
 class ComposerStaticInit25ddf2c1435793d0d21e3ae7811af649
 {
     public static $prefixLengthsPsr4 = array (
-        'Y' => 
+        'C' => 
         array (
-            'Yamona\\Api\\' => 11,
+            'Category\\' => 9,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Yamona\\Api\\' => 
+        'Category\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src',
+            0 => __DIR__ . '/../..' . '/Category',
         ),
     );
 
