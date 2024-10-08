@@ -3,11 +3,12 @@
 use Category\Controllers\CategoryController;
 use Course\Controllers\CourseController;
 
-// Handle the request based on the URL path
-$path = explode('/', $_SERVER['REQUEST_URI']);
-$method = $_SERVER['REQUEST_METHOD'];
-
+// Set response header
 header('Content-Type: application/json');
+
+// Get the request path and method
+$path = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+$method = $_SERVER['REQUEST_METHOD'];
 
 if ($path[1] != 'categories' && $path[1] != 'courses' && $path[1] != 'courses_by_category') {
     http_response_code(405);
