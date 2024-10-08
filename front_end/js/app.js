@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const app = document.getElementById('app');
+  const categoriesSection = document.getElementById('categories');
+  const coursesSection = document.getElementById('courses');
 
   // Function to fetch and render categories
   function fetchCategories() {
@@ -8,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(categories => {
         const categoryTree = buildCategoryTree(categories);
         renderCategories(categoryTree);
+        fetchAllCourses(); // Initially load all courses in the right section
       })
       .catch(error => console.error('Error fetching categories:', error));
   }
@@ -37,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Render hierarchical categories
   function renderCategories(categories) {
-    const html = `<h1>Categories</h1>${createCategoryList(categories)}`;
-    app.innerHTML = html;
+    const html = `<h2>Categories</h2>${createCategoryList(categories)}`;
+    categoriesSection.innerHTML = html;
     addCategoryEventListeners();
   }
 
@@ -47,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return `<ul>
       ${categories.map(category => `
         <li>
-          <span class="nav-link" data-category-id="${category.id}">${category.name}</span>
+          <a href="#" class="category-link" data-category-id="${category.id}">${category.name}</a>
           ${createCategoryList(category.children)}
         </li>
       `).join('')}
@@ -56,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Add event listeners to category links
   function addCategoryEventListeners() {
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.category-link').forEach(link => {
       link.addEventListener('click', function (event) {
         event.preventDefault();
         const categoryId = this.getAttribute('data-category-id');
@@ -65,28 +67,32 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Fetch and render all courses
+  function fetchAllCourses() {
+    fetch('http://api.cc.localhost/courses') // Assuming an endpoint to fetch all courses
+      .then(response => response.json())
+      .then(courses => renderCourses(courses))
+      .catch(error => console.error('Error fetching all courses:', error));
+  }
+
   // Fetch and render courses by category ID
   function fetchCoursesByCategory(categoryId) {
     fetch(`http://api.cc.localhost/courses_by_category/${categoryId}`)
       .then(response => response.json())
       .then(courses => renderCourses(courses))
-      .catch(error => console.error('Error fetching courses:', error));
+      .catch(error => console.error('Error fetching courses by category:', error));
   }
 
   // Render courses with links to their individual pages
   function renderCourses(courses) {
-    const html = `<h1>Courses</h1>
+    const html = `<h2>Courses</h2>
                   <ul>
                     ${courses.map(course => `
                       <li>
-                        <a href="#" class="course-link" data-course-id="${course.id}">${course.name ?? 'No title available'}</a>
+                        <a href="#" class="course-link" data-course-id="${course.id}">${course.name ?? 'No name available'}</a>
                       </li>`).join('')}
-                  </ul>
-                  <button id="back-to-categories">Back to Categories</button>`;
-    app.innerHTML = html;
-    document.getElementById('back-to-categories').addEventListener('click', function () {
-      fetchCategories();
-    });
+                  </ul>`;
+    coursesSection.innerHTML = html;
     addCourseEventListeners();
   }
 
@@ -114,12 +120,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const html = `<h1>${course.name}</h1>
                   <p>${course.description}</p>
                   <button id="back-to-courses">Back to Courses</button>`;
-    app.innerHTML = html;
+    coursesSection.innerHTML = html;
     document.getElementById('back-to-courses').addEventListener('click', function () {
-      fetchCoursesByCategory(course.category_id); // Assuming course object contains category_id
+      fetchAllCourses(); // Or fetchCoursesByCategory(course.category_id); if you want to go back to category view
     });
   }
 
-  // Initial load of categories
+  // Initial load of categories and courses
   fetchCategories();
 });
