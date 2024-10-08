@@ -10,14 +10,14 @@ class CategoryController
      * Retrieves all categories from the database.
      *
      * @return array An array of categories. Each category is an associative array
-     *     with the following keys:
-     *     - id
-     *     - name
-     *     - description
-     *     - parent_id
-     *     - count_of_courses
-     *     - created_at
-     *     - updated_at
+     *               with the following keys:
+     *               - id
+     *               - name
+     *               - description
+     *               - parent_id
+     *               - count_of_courses
+     *               - created_at
+     *               - updated_at
      *
      * @throws \PDOException If there's a problem with the query
      */
@@ -27,7 +27,16 @@ class CategoryController
         $conn = $db->getConnection();
 
         try {
-            $sql = "SELECT * FROM category";
+            $sql = "SELECT c.id AS id,
+                    c.name AS name,
+                    c.description AS description,
+                    c.parent_id AS parent_id,
+                    ccc.count_of_courses AS count_of_courses,
+                    c.created_at AS created_at,
+                    c.updated_at AS updated_at
+                   FROM category c
+                   LEFT JOIN category_course_count ccc ON c.id = ccc.category_id
+                   ORDER BY name;";
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -44,7 +53,7 @@ class CategoryController
      * @param string $id The ID of the category to retrieve
      *
      * @return array|null The category with the given ID, or null if no such
-     *     category exists
+     *                    category exists
      *
      * @throws \PDOException If there's a problem with the query
      */
