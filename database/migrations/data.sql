@@ -151,7 +151,7 @@ VALUES
 CREATE TABLE
     `course` (
         `id` VARCHAR(36) PRIMARY KEY,
-        `title` VARCHAR(255) NOT NULL,
+        `name` VARCHAR(255) NOT NULL,
         `description` TEXT NOT NULL,
         `preview` VARCHAR(255) NOT NULL,
         `category_id` VARCHAR(36) NOT NULL,
@@ -163,7 +163,7 @@ CREATE TABLE
 INSERT INTO
     `course` (
         `id`,
-        `title`,
+        `name`,
         `description`,
         `preview`,
         `category_id`
