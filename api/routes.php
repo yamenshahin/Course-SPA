@@ -17,7 +17,7 @@ $validPaths = ['categories', 'courses', 'courses_by_category'];
 
 // Validate the requested path
 if (!in_array($path[0], $validPaths)) {
-    sendResponse(405, 'This route does not exist');
+    $apiController->sendResponse(405, 'This route does not exist');
     exit;
 }
 

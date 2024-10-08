@@ -80,7 +80,7 @@ class ApiController
      * @param int $statusCode
      * @param mixed $message
      */
-    private function sendResponse($statusCode, $message)
+    public function sendResponse($statusCode, $message)
     {
         http_response_code($statusCode);
         echo json_encode(is_array($message) ? $message : ['message' => $message]);
