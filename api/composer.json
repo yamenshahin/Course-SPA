@@ -6,7 +6,8 @@
             "Category\\": "Category/",
             "Course\\": "Course/",
             "Utils\\": "Utils/",
-            "Config\\": "Config/"
+            "Config\\": "Config/",
+            "Api\\": "Api/"
         }
     },
     "authors": [

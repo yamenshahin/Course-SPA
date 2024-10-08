@@ -16,4 +16,5 @@ return array(
     'Course\\' => array($baseDir . '/Course'),
     'Config\\' => array($baseDir . '/Config'),
     'Category\\' => array($baseDir . '/Category'),
+    'Api\\' => array($baseDir . '/Api'),
 );
