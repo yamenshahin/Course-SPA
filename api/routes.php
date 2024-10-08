@@ -96,7 +96,7 @@ switch ($path[1]) {
                     $error_message = $th->getMessage();
                     echo json_encode(['message' => $error_message]); // Handle the error gracefully
                 }
-            } else { // get course by category id
+            } else { // get all courses by category id
                 try {
                     $controller = new CourseController();
                     $courses = $controller->getAllCoursesByCategoryId($path[2]);
