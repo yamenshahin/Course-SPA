@@ -26,8 +26,7 @@ switch ($path[1]) {
                     http_response_code(500);
                     echo json_encode(['message' => 'Internal server error']);
                 }
-            } else {
-
+            } else { // get category by id
                 try {
                     $controller = new CategoryController();
                     $category = $controller->getById($path[2]);
@@ -43,11 +42,13 @@ switch ($path[1]) {
                     echo json_encode(['message' => 'Internal server error']);
                 }
             }
-        } else {
+        } else { // method not allowed
             http_response_code(405);
+            echo json_encode(['message' => 'Method not allowed']);
         }
         break;
     default:
-        http_response_code(405);
+        http_response_code(500);
+        echo json_encode(['message' => 'Internal server error']);
         break;
 }
