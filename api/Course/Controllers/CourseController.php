@@ -10,14 +10,14 @@ class CourseController
      * Retrieves all courses from the database.
      *
      * @return array An array of courses. Each course is an associative array
-     *     with the following keys:
-     *     - id
-     *     - name
-     *     - description
-     *     - preview
-     *     - main_category_name
-     *     - created_at
-     *     - updated_at
+     *               with the following keys:
+     *               - id
+     *               - name
+     *               - description
+     *               - preview
+     *               - main_category_name
+     *               - created_at
+     *               - updated_at
      *
      * @throws PDOException If there's a problem with the query
      */
@@ -27,7 +27,20 @@ class CourseController
         $conn = $db->getConnection();
 
         try {
-            $sql = "SELECT * FROM course";
+            // SQL query to retrieve courses with main category names
+            $sql = 'SELECT
+                c.id,
+                c.name,
+                c.description,
+                c.preview,
+                cc.name AS main_category_name,
+                c.created_at,
+                c.updated_at
+            FROM
+                course c
+            LEFT JOIN
+                category cc ON c.category_id = cc.id;';
+
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -44,7 +57,7 @@ class CourseController
      * @param string $id The ID of the course to retrieve
      *
      * @return array|null The course with the given ID, or null if no such
-     *     course exists
+     *                    course exists
      *
      * @throws PDOException If there's a problem with the query
      */
