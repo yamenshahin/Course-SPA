@@ -47,6 +47,38 @@ switch ($path[1]) {
             echo json_encode(['message' => 'Method not allowed']);
         }
         break;
+    case 'courses':
+        if ($method === 'GET') {
+            if ($path[2] == null) { // get all courses since there is no id
+                try {
+                    $controller = new CourseController();
+                    $courses = $controller->getAll();
+                    echo json_encode($courses);
+                } catch (\Throwable $th) {
+                    http_response_code(500);
+                    echo json_encode(['message' => 'Internal server error']);
+                }
+            } else { // get course by id
+                try {
+                    $controller = new CourseController();
+                    $course = $controller->getById($path[2]);
+
+                    if ($course == null) { // course not found
+                        http_response_code(404);
+                        echo json_encode(['message' => 'Course not found']);
+                    } else {
+                        echo json_encode($course);
+                    }
+                } catch (\Throwable $th) {
+                    http_response_code(500);
+                    echo json_encode(['message' => 'Internal server error']);
+                }
+            }
+        } else { // method not allowed
+            http_response_code(405);
+            echo json_encode(['message' => 'Method not allowed']);
+        }
+        break;
     default:
         http_response_code(500);
         echo json_encode(['message' => 'Internal server error']);
