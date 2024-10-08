@@ -21,25 +21,27 @@ switch ($path[1]) {
                 try {
                     $controller = new CategoryController();
                     $categories = $controller->getAll();
-                    echo json_encode($categories);
+                    echo json_encode($categories); // Success case
                 } catch (\Throwable $th) {
-                    http_response_code(500);
-                    echo json_encode(['message' => 'Internal server error']);
+                    // Extract the error message from the returned data
+                    $error_message = $th->getMessage();
+                    echo json_encode(['message' => $error_message]); // Handle the error gracefully
                 }
             } else { // get category by id
                 try {
                     $controller = new CategoryController();
                     $category = $controller->getById($path[2]);
 
-                    if ($category == null) { // category not found
+                    if ($category === null) {
                         http_response_code(404);
                         echo json_encode(['message' => 'Category not found']);
                     } else {
                         echo json_encode($category);
                     }
                 } catch (\Throwable $th) {
-                    http_response_code(500);
-                    echo json_encode(['message' => 'Internal server error']);
+                    // Extract the error message from the returned data
+                    $error_message = $th->getMessage();
+                    echo json_encode(['message' => $error_message]); // Handle the error gracefully
                 }
             }
         } else { // method not allowed
@@ -55,8 +57,9 @@ switch ($path[1]) {
                     $courses = $controller->getAll();
                     echo json_encode($courses);
                 } catch (\Throwable $th) {
-                    http_response_code(500);
-                    echo json_encode(['message' => 'Internal server error']);
+                    // Extract the error message from the returned data
+                    $error_message = $th->getMessage();
+                    echo json_encode(['message' => $error_message]); // Handle the error gracefully
                 }
             } else { // get course by id
                 try {
@@ -70,8 +73,9 @@ switch ($path[1]) {
                         echo json_encode($course);
                     }
                 } catch (\Throwable $th) {
-                    http_response_code(500);
-                    echo json_encode(['message' => 'Internal server error']);
+                    // Extract the error message from the returned data
+                    $error_message = $th->getMessage();
+                    echo json_encode(['message' => $error_message]); // Handle the error gracefully
                 }
             }
         } else { // method not allowed
