@@ -4,6 +4,9 @@ namespace Category\Models;
 
 use Utils\Database;
 
+/**
+ * This for demontor purposes, as we dont do CURD oprtion except read.
+ */
 class Category
 {
     private string $id;

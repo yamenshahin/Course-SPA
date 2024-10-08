@@ -2,7 +2,6 @@
 
 namespace Category\Controllers;
 
-use Category\Models\Category;
 use Utils\Database;
 
 class CategoryController
@@ -14,7 +13,11 @@ class CategoryController
      *     with the following keys:
      *     - id
      *     - name
-     *     - parent
+     *     - description
+     *     - parent_id
+     *     - count_of_courses
+     *     - created_at
+     *     - updated_at
      *
      * @throws \PDOException If there's a problem with the query
      */
