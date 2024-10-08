@@ -9,7 +9,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 header('Content-Type: application/json');
 
-if ($path[1] != 'categories' && $path[1] != 'courses') {
+if ($path[1] != 'categories' && $path[1] != 'courses' && $path[1] != 'courses_by_category') {
     http_response_code(405);
     exit;
 }
@@ -72,6 +72,34 @@ switch ($path[1]) {
                     } else {
                         echo json_encode($course);
                     }
+                } catch (\Throwable $th) {
+                    // Extract the error message from the returned data
+                    $error_message = $th->getMessage();
+                    echo json_encode(['message' => $error_message]); // Handle the error gracefully
+                }
+            }
+        } else { // method not allowed
+            http_response_code(405);
+            echo json_encode(['message' => 'Method not allowed']);
+        }
+        break;
+    case 'courses_by_category':
+        if ($method === 'GET') {
+            if ($path[2] == null) { // get all courses since there is no id
+                try {
+                    $controller = new CourseController();
+                    $courses = $controller->getAll();
+                    echo json_encode($courses);
+                } catch (\Throwable $th) {
+                    // Extract the error message from the returned data
+                    $error_message = $th->getMessage();
+                    echo json_encode(['message' => $error_message]); // Handle the error gracefully
+                }
+            } else { // get course by category id
+                try {
+                    $controller = new CourseController();
+                    $courses = $controller->getAllCoursesByCategoryId($path[2]);
+                    echo json_encode($courses);
                 } catch (\Throwable $th) {
                     // Extract the error message from the returned data
                     $error_message = $th->getMessage();

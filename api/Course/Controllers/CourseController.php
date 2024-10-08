@@ -68,4 +68,45 @@ class CourseController
             return ['message' => 'Internal Server Error' . $e->getMessage()];
         }
     }
+
+    /**
+     * Retrieves all courses from the database that belong to the given category
+     * or any of its subcategories.
+     *
+     * @param string $categoryId The ID of the category to retrieve courses from
+     *
+     * @return array An array of courses. Each course is an associative array
+     *
+     * @throws \PDOException If there's a problem with the query
+     */
+    public function getAllCoursesByCategoryId(string $categoryId): array
+    {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+
+        try {
+            $sql = 'WITH RECURSIVE category_hierarchy AS (
+                SELECT id, parent_id
+                FROM category
+                WHERE id = :category_id
+
+                UNION ALL
+
+                SELECT c.id, c.parent_id
+                FROM category c
+                JOIN category_hierarchy ch ON c.parent_id = ch.id
+                )
+                SELECT co.id, co.name, co.description, co.preview, co.category_id, co.created_at, co.updated_at
+                FROM course co
+                JOIN category_hierarchy ch ON co.category_id = ch.id;';
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute(['category_id' => $categoryId]);
+
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            http_response_code(500); // Set appropriate HTTP status code
+            return ['message' => 'Internal Server Error' . $e->getMessage()];
+        }
+    }
 }

@@ -64,21 +64,4 @@ class CategoryController
             return ['message' => 'Internal Server Error' . $e->getMessage()];
         }
     }
-
-    public function getAllCoursesByCategoryId(string $categoryId): array
-    {
-        $db = Database::getInstance();
-        $conn = $db->getConnection();
-
-        try {
-            $sql = "SELECT * FROM course WHERE category_id = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([$categoryId]);
-
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\PDOException $e) {
-            http_response_code(500); // Set appropriate HTTP status code
-            return ['message' => 'Internal Server Error' . $e->getMessage()];
-        }
-    }
 }
