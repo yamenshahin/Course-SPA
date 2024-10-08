@@ -5,7 +5,7 @@ namespace Category\Models;
 use Utils\Database;
 
 /**
- * This for demontor purposes, as we dont do CURD oprtion except read.
+ * This for demontor purposes, as we dont do CRUD oprtion except read.
  */
 class Category
 {
