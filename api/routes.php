@@ -3,6 +3,9 @@
 use Api\Controllers\ApiController;
 
 // Set response header
+header('Access-Control-Allow-Origin: http://cc.localhost');
+header('Access-Control-Allow-Methods: GET');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
 
 // Initialize the controller
