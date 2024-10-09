@@ -1,67 +1,37 @@
 document.addEventListener('DOMContentLoaded', function () {
+  const BASE_URL = 'http://api.cc.localhost';
   const categoriesSection = document.getElementById('categories');
   const coursesSection = document.getElementById('courses');
 
-  /**
-   * Truncates a given text to a specified maximum length. If the text exceeds
-   * the maximum length, it will be truncated to the maximum length and an
-   * ellipsis will be appended.
-   *
-   * @param {string} text - The input text to truncate.
-   * @param {number} maxLength - The maximum length of the output text.
-   * @return {string} The truncated text.
-   */
+  // Function to truncate text
   function truncateText(text, maxLength) {
-    if (text.length > maxLength) {
-      return text.substring(0, maxLength) + "...";
-    }
-    return text;
+    return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
   }
 
-  /**
-   * Updates the text of the header element at the top of the page with the given
-   * text.
-   *
-   * @param {string} text - The text to set as the content of the header element.
-   */
+  // Function to update header text
   function updateHeader(text) {
-    const headerElement = document.getElementById('header');
-    headerElement.textContent = text;
+    document.getElementById('header').textContent = text;
   }
 
-  /**
-   * Fetches all categories from the API and renders them in the left section.
-   * Also fetches all courses initially and renders them in the right section.
-   *
-   * @private
-   */
+  // Fetch categories and render them
   function fetchCategories() {
-    fetch('http://api.cc.localhost/categories')
+    fetch(`${BASE_URL}/categories`)
       .then(response => response.json())
       .then(categories => {
         const categoryTree = buildCategoryTree(categories);
         renderCategories(categoryTree);
-        fetchAllCourses(); // Initially load all courses in the right section
+        fetchAllCourses();
       })
       .catch(error => console.error('Error fetching categories:', error));
   }
 
-  /**
-   * Takes a flat list of categories and builds a nested tree structure from it.
-   * The returned tree is an array of category objects, where each category object
-   * has a "children" property that is an array of its subcategories.
-   *
-   * @param {Array} categories - An array of category objects
-   * @return {Array} A nested array of category objects
-   */
+  // Build a nested category tree
   function buildCategoryTree(categories) {
     const categoryMap = {};
-
     categories.forEach(category => {
       category.children = [];
       categoryMap[category.id] = category;
     });
-
     const tree = [];
     categories.forEach(category => {
       if (category.parent_id) {
@@ -72,31 +42,16 @@ document.addEventListener('DOMContentLoaded', function () {
         tree.push(category);
       }
     });
-
     return tree;
   }
 
-  
-  /**
-   * Render a nested list of categories into the page's categories section, and
-   * add event listeners to each category link.
-   * @param {Array} categories - An array of category objects
-   */
+  // Render categories in the categories section
   function renderCategories(categories) {
-    const html = `${createCategoryList(categories)}`;
-    categoriesSection.innerHTML = html;
-    addCategoryEventListeners();
+    categoriesSection.innerHTML = createCategoryList(categories);
+    categoriesSection.addEventListener('click', handleCategoryClick);
   }
 
-  /**
-   * Returns a string of HTML representing a nested list of categories.
-   * The categories must have an "id", "name", and "count_of_courses" property.
-   * The "children" property is optional, and if present, it is an array of
-   * subcategories that will be recursively rendered in the list.
-   *
-   * @param {Array} categories - An array of category objects
-   * @return {string} A string of HTML representing a nested list of categories
-   */
+  // Create a list of categories
   function createCategoryList(categories) {
     return `<ul class="category-list">
       ${categories.map(category => `
@@ -108,136 +63,92 @@ document.addEventListener('DOMContentLoaded', function () {
     </ul>`;
   }
 
-  /**
-   * Add event listeners to category links.
-   * When a category link is clicked, the link gets highlighted, the header is
-   * updated with the selected category name, and the courses by the selected
-   * category ID are fetched and rendered.
-   */
-  function addCategoryEventListeners() {
-    document.querySelectorAll('.category-link').forEach(link => {
-      link.addEventListener('click', function (event) {
-        event.preventDefault();
+  // Handle category click using event delegation
+  function handleCategoryClick(event) {
+    event.preventDefault();
+    const link = event.target.closest('.category-link');
+    if (!link) return;
 
-        // Remove active class from all categories
-        document.querySelectorAll('.category-link').forEach(item => {
-          item.classList.remove('active-category');
-        });
+    // Reset and set active class
+    document.querySelectorAll('.category-link').forEach(item => item.classList.remove('active-category'));
+    link.classList.add('active-category');
 
-        // Highlight the clicked category
-        this.classList.add('active-category');
+    const categoryId = link.getAttribute('data-category-id');
+    const categoryName = link.textContent.split(' (')[0];
+    updateHeader(categoryName);
 
-        // Fetch and render courses by the selected category ID
-        const categoryId = this.getAttribute('data-category-id');
-        const categoryName = this.textContent.split(' (')[0]; // Assuming name format: "Category Name (10)"
-
-        // Update the header with the selected category name
-        updateHeader(categoryName);
-
-        fetchCoursesByCategory(categoryId);
-      });
-    });
+    fetchCoursesByCategory(categoryId);
   }
 
-  /**
-   * Fetches all courses from the API and renders them in the courses section.
-   * Also updates the header with the title "Course Catalog".
-   */
+  // Fetch and render all courses
   function fetchAllCourses() {
     updateHeader('Course Catalog');
-    fetch('http://api.cc.localhost/courses') // Assuming an endpoint to fetch all courses
+    fetch(`${BASE_URL}/courses`)
       .then(response => response.json())
       .then(courses => renderCourses(courses))
       .catch(error => console.error('Error fetching all courses:', error));
   }
 
-  /**
-   * Fetches all courses by a given category ID from the API and renders them
-   * in the courses section.
-   *
-   * @param {string} categoryId The ID of the category to fetch courses from.
-   */
+  // Fetch courses by category
   function fetchCoursesByCategory(categoryId) {
-    fetch(`http://api.cc.localhost/courses_by_category/${categoryId}`)
+    fetch(`${BASE_URL}/courses_by_category/${categoryId}`)
       .then(response => response.json())
       .then(courses => renderCourses(courses))
       .catch(error => console.error('Error fetching courses by category:', error));
   }
 
-  /**
-   * Renders the given courses array in the courses section of the page.
-   *
-   * @param {array} courses An array of course objects with the following properties:
-   *  - id {string}: The ID of the course.
-   *  - name {string}: The name of the course.
-   *  - description {string}: A brief description of the course.
-   *  - preview {string}: A URL pointing to a preview image for the course.
-   *  - main_category_name {string}: The name of the main category the course belongs to.
-   */
+  // Render courses in the courses section
   function renderCourses(courses) {
     const html = `<div class="nested-container">
-                    ${courses.map(course => `
-                      <a href="#" class="course-link" data-course-id="${course.id}">
-                        <section class="course-card">
-                            <div class="course-image">
-                                <img class="responsive-image" src="${course.preview ?? 'https://via.placeholder.com/300x180'}" alt="Course Image ${course.name ?? 'No name available'}">
-                                <div class="course-category">${course.main_category_name ?? 'No category available'}</div>
-                            </div>
-                            <div class="course-content">
-                                <h3 class="course-name">${truncateText(course.name ?? 'No name available', 25)}</h3>
-                                <p class="course-description">${truncateText(course.description ?? 'No description available', 150)}</p>
-                            </div>
-                        </section>
-                      </a>`).join('')}
-                  </div>`;
+      ${courses.map(course => `
+        <a href="#" class="course-link" data-course-id="${course.id}">
+          <section class="course-card">
+            <div class="course-image">
+              <img class="responsive-image" src="${course.preview ?? 'https://via.placeholder.com/300x180'}" alt="Course Image ${course.name}">
+              <div class="course-category">${course.main_category_name ?? 'No category available'}</div>
+            </div>
+            <div class="course-content">
+              <h3 class="course-name">${truncateText(course.name ?? 'No name available', 25)}</h3>
+              <p class="course-description">${truncateText(course.description ?? 'No description available', 150)}</p>
+            </div>
+          </section>
+        </a>`
+    ).join('')}
+    </div>`;
     coursesSection.innerHTML = html;
-    addCourseEventListeners();
+    coursesSection.addEventListener('click', handleCourseClick);
   }
 
-  /**
-   * Adds event listeners to the course links. When a course link is clicked,
-   * the event is prevented from propagating, and the course details are
-   * fetched and rendered.
-   */
-  function addCourseEventListeners() {
-    document.querySelectorAll('.course-link').forEach(link => {
-      link.addEventListener('click', function (event) {
-        event.preventDefault();
-        const courseId = this.getAttribute('data-course-id');
-        fetchCourseDetails(courseId);
-      });
-    });
+  // Handle course click using event delegation
+  function handleCourseClick(event) {
+    event.preventDefault();
+    const link = event.target.closest('.course-link');
+    if (!link) return;
+
+    const courseId = link.getAttribute('data-course-id');
+    fetchCourseDetails(courseId);
   }
 
-  /**
-   * Fetches the details of a course from the API by its ID and renders them.
-   *
-   * @param {string} courseId The ID of the course to fetch.
-   */
+  // Fetch course details
   function fetchCourseDetails(courseId) {
-    fetch(`http://api.cc.localhost/courses/${courseId}`)
+    fetch(`${BASE_URL}/courses/${courseId}`)
       .then(response => response.json())
       .then(course => renderCourseDetails(course))
       .catch(error => console.error('Error fetching course details:', error));
   }
 
-  /**
-   * Renders the details of a course in the #courses section.
-   * 
-   * @param {object} course The course object containing its details.
-   * 
-   * The rendered HTML will contain the course name, image, description, and a
-   * "Back to Courses" button. When the button is clicked, the function will
-   * fetch all courses again and render them.
-   */
+  // Render course details
   function renderCourseDetails(course) {
     const html = `<h2>${course.name ?? 'No name available'}</h2>
-                  <img class="responsive-image" src="${course.preview ?? 'https://via.placeholder.com/300x180'}" alt="Course Image ${course.name ?? 'No name available'}">
-                  <p>${course.description ?? 'No description available'}</p>
-                  <button id="back-to-courses">Back to Courses</button>`;
+      <img class="responsive-image" src="${course.preview ?? 'https://via.placeholder.com/300x180'}" alt="Course Image ${course.name}">
+      <p>${course.description ?? 'No description available'}</p>
+      <button id="back-to-courses">Back to Courses</button>`;
     coursesSection.innerHTML = html;
-    document.getElementById('back-to-courses').addEventListener('click', function () {
-      fetchAllCourses(); // Or fetchCoursesByCategory(course.category_id); if you want to go back to category view
+    const backButton = document.getElementById('back-to-courses');
+    backButton.addEventListener('click', function () {
+      // Fetch all courses and reset active category link state
+      fetchAllCourses();
+      document.querySelectorAll('.category-link').forEach(item => item.classList.remove('active-category'));
     });
   }
 
