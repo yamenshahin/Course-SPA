@@ -1,27 +1,124 @@
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
-    display: flex;
-    height: 100vh;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    background-color: #dedddd;
 }
 
-#container {
+.main-container {
     display: flex;
+    flex-direction: column;
     width: 100%;
 }
 
-.section {
+.column {
     padding: 20px;
-    overflow-y: auto;
+    box-sizing: border-box;
 }
 
-#categories {
-    flex: 1;
-    border-right: 1px solid #ddd;
+.nested-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
 }
 
-#courses {
-    flex: 2;
-    padding-left: 20px;
+
+@media (min-width: 768px) {
+    .main-container {
+        flex-direction: row;
+    }
+
+    .one-third {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+    .two-thirds {
+        flex: 3;
+    }
+}
+
+@media (min-width: 960px) {
+    .nested-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.responsive-image {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Styles for header */
+.header {
+    text-align: center;
+}
+
+/* Styles for category lsit */
+.category-list {
+    list-style: none;
+    padding-left: 30px;
+}
+
+.category-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 16px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.active-category {
+    padding-left: 5px;
+    border-left: 5px solid #ee8d20;
+}
+
+/* Styles for course cards */
+.course-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    margin: 10px;
+    position: relative;
+}
+
+.course-image {
+    width: 100%;
+    display: block;
+    position: relative;
+}
+
+.course-category {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgb(255, 255, 255);
+    color: #363636;
+    font-weight: 800;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.course-content {
+    padding: 15px;
+}
+
+.course-name {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.course-description {
+    font-size: 14px;
+    color: #555;
+}
+
+.course-link {
+    text-decoration: none;
 }

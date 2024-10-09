@@ -2,6 +2,27 @@ document.addEventListener('DOMContentLoaded', function () {
   const categoriesSection = document.getElementById('categories');
   const coursesSection = document.getElementById('courses');
 
+  /**
+   * Truncates a given text to a specified maximum length. If the text exceeds
+   * the maximum length, it will be truncated to the maximum length and an
+   * ellipsis will be appended.
+   *
+   * @param {string} text - The input text to truncate.
+   * @param {number} maxLength - The maximum length of the output text.
+   * @return {string} The truncated text.
+   */
+  function truncateText(text, maxLength) {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
+    }
+    return text;
+  }
+
+  // Update header based on the category selected
+  function updateHeader(text) {
+    const headerElement = document.getElementById('header');
+    headerElement.textContent = text;
+  }
   // Function to fetch and render categories
   function fetchCategories() {
     fetch('http://api.cc.localhost/categories')
@@ -39,17 +60,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Render hierarchical categories
   function renderCategories(categories) {
-    const html = `<h2>Categories</h2>${createCategoryList(categories)}`;
+    const html = `${createCategoryList(categories)}`;
     categoriesSection.innerHTML = html;
     addCategoryEventListeners();
   }
 
   // Create a nested list of categories
   function createCategoryList(categories) {
-    return `<ul>
+    return `<ul class="category-list">
       ${categories.map(category => `
         <li>
-          <a href="#" class="category-link" data-category-id="${category.id}">${category.name}</a>
+          <a href="#" class="category-link" data-category-id="${category.id}">${category.name} (${category.count_of_courses})</a>
           ${createCategoryList(category.children)}
         </li>
       `).join('')}
@@ -61,7 +82,22 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.category-link').forEach(link => {
       link.addEventListener('click', function (event) {
         event.preventDefault();
+
+        // Remove active class from all categories
+        document.querySelectorAll('.category-link').forEach(item => {
+          item.classList.remove('active-category');
+        });
+
+        // Highlight the clicked category
+        this.classList.add('active-category');
+
+        // Fetch and render courses by the selected category ID
         const categoryId = this.getAttribute('data-category-id');
+        const categoryName = this.textContent.split(' (')[0]; // Assuming name format: "Category Name (10)"
+
+        // Update the header with the selected category name
+        updateHeader(categoryName);
+
         fetchCoursesByCategory(categoryId);
       });
     });
@@ -69,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Fetch and render all courses
   function fetchAllCourses() {
+    updateHeader('Course Catalog');
     fetch('http://api.cc.localhost/courses') // Assuming an endpoint to fetch all courses
       .then(response => response.json())
       .then(courses => renderCourses(courses))
@@ -85,13 +122,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Render courses with links to their individual pages
   function renderCourses(courses) {
-    const html = `<h2>Courses</h2>
-                  <ul>
+    const html = `<div class="nested-container">
                     ${courses.map(course => `
-                      <li>
-                        <a href="#" class="course-link" data-course-id="${course.id}">${course.name ?? 'No name available'}</a>
-                      </li>`).join('')}
-                  </ul>`;
+                      <a href="#" class="course-link" data-course-id="${course.id}">
+                        <section class="course-card">
+                            <div class="course-image">
+                                <img class="responsive-image" src="${course.preview ?? 'https://via.placeholder.com/300x180'}" alt="Course Image ${course.name ?? 'No name available'}">
+                                <div class="course-category">${course.main_category_name ?? 'No category available'}</div>
+                            </div>
+                            <div class="course-content">
+                                <h3 class="course-name">${truncateText(course.name ?? 'No name available', 25)}</h3>
+                                <p class="course-description">${truncateText(course.description ?? 'No description available', 150)}</p>
+                            </div>
+                        </section>
+                      </a>`).join('')}
+                  </div>`;
     coursesSection.innerHTML = html;
     addCourseEventListeners();
   }
@@ -117,8 +162,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Render course details
   function renderCourseDetails(course) {
-    const html = `<h1>${course.name}</h1>
-                  <p>${course.description}</p>
+    const html = `<h2>${course.name ?? 'No name available'}</h2>
+                  <img class="responsive-image" src="${course.preview ?? 'https://via.placeholder.com/300x180'}" alt="Course Image ${course.name ?? 'No name available'}">
+                  <p>${course.description ?? 'No description available'}</p>
                   <button id="back-to-courses">Back to Courses</button>`;
     coursesSection.innerHTML = html;
     document.getElementById('back-to-courses').addEventListener('click', function () {
