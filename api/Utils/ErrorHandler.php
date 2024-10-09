@@ -8,7 +8,7 @@ class ErrorHandler
      * Handles and logs exceptions, returning a custom message for securtiy.
      *
      * @param \PDOException $e
-     * 
+     *
      * @return array The custom error message array.
      */
     public function handleException(\PDOException $e): array

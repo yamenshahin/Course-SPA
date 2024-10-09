@@ -9,9 +9,9 @@ class CategoryController
 {
     /**
      * Gets a database connection.
-     * 
+     *
      * @return \PDO The database connection.
-     * 
+     *
      * @throws \PDOException If there's a problem obtaining the connection.
      */
     private function getDbConnection(): \PDO
